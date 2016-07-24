@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {createStore} from 'redux';
 import deepFreeze from 'deep-freeze'; 
 import expect from 'expect';
-
+import ReactDOM from 'react-dom';
 
 
 const makeEmptyBoard =  function (size) {
@@ -179,7 +179,7 @@ const testApp = () => {
 testApp();
 
 const store = createStore(game);
-console.log('state is ', store.getState());
+//console.log('state is ', store.getState());
 store.dispatch({
     type : 'togglePiece',
     x : 1, 
@@ -187,13 +187,70 @@ store.dispatch({
 })
 console.log('state is ', store.getState());
 
-export default class App extends Component {
-  render() {
+const Grid = React.createClass({
+
+    render () {
+    console.log(this.props)
     return (
-        <div>
-            <h1>Hello, world.</h1>
-            {/*<Grid board={board}/>*/}
-        </div>
+    <div>
+        <table>
+                {
+                    this.props.board.map((row,xIndex) => {
+                        console.log(row)
+                        return (
+                            <tr> 
+                                { 
+                                    //row[0]
+                                    row.map((value, yIndex) => {
+                                        return <Cell location = {[xIndex,yIndex] } value={value}/>
+                                    })
+                                }
+                            </tr>
+                        );
+                    })
+                }
+        </table>
+    </div>
     );
-  }
+    }     
+});
+
+const Cell = React.createClass({
+    render() {
+        return (
+            <td onClick = { () => {
+                store.dispatch({
+                    type: 'togglePiece',
+                    x: this.props.location[1],
+                    y: this.props.location[0] 
+                })
+            }
+            }>
+                 {this.props.value }
+                 
+            </td>
+        );
+    }
+})
+var x = 0;
+const app = () => {
+    console.log(x++)
+    //store
+    ReactDOM.render(<Grid board={store.getState()}/>, document.getElementById('root'));
 }
+
+store.subscribe(app);
+
+export default app
+// export default class App extends Component {
+//   render() {
+//     store
+//     return (
+//         <div>
+//             <h1>Hello, world.</h1>
+//             
+//             <Grid board={store.getState()}/>
+//         </div>
+//     );
+//   }
+// }
