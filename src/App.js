@@ -3,7 +3,7 @@ import {createStore} from 'redux';
 import deepFreeze from 'deep-freeze'; 
 import expect from 'expect';
 import ReactDOM from 'react-dom';
-
+//import Grid from './Grid.js';
 
 const makeEmptyBoard =  function (size) {
     var emptyBoard = [];
@@ -112,6 +112,32 @@ const rightMove = (state, coordinates) => {
     return setPiece(toogledState, newCoordinates)
 }
 
+const leftMove = (state, coordinates) => {
+    var toogledState = togglePiece(state, coordinates);
+    var newCoordinates = {
+        x : coordinates.x-1,
+        y : coordinates.y
+    }
+    return setPiece(toogledState, newCoordinates);
+}
+
+const upMove = (state, coordinates) => {
+    var toogledState = togglePiece(state, coordinates);
+    var newCoordinates = {
+        x : coordinates.x,
+        y : coordinates.y+1
+    }
+    return setPiece(toogledState, newCoordinates);
+}
+
+const downMove = (state, coordinates) => {
+    var toogledState = togglePiece(state, coordinates);
+    var newCoordinates = {
+        x : coordinates.x,
+        y : coordinates.y-1
+    }
+    return setPiece(toogledState, newCoordinates);
+}
 const testRightMove = () =>  {
     const startState = [
         [1,0,0,0,0],
@@ -187,6 +213,12 @@ store.dispatch({
 })
 console.log('state is ', store.getState());
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+//react  stuff
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const Grid = React.createClass({
 
     render () {
@@ -232,6 +264,7 @@ const Cell = React.createClass({
         );
     }
 })
+
 var x = 0;
 const app = () => {
     console.log(x++)
